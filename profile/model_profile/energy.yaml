@@ -1,0 +1,414 @@
+MobileNet:
+  cuda:
+    jet1:
+      energy:
+        value: 3.6
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 4.8
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.1
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+MobileNetV2:
+  cuda:
+    jet1:
+      energy:
+        value: 3.4
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 5.5
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+    rasp1:
+      energy:
+        value: 5.9
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.0
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+NASNetMobile:
+  cuda:
+    jet1:
+      energy:
+        value: 4.3
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 5.2
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+    rasp1:
+      energy:
+        value: 5.8
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.4
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+DenseNet121:
+  cuda:
+    jet1:
+      energy:
+        value: 6.0
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 5.5
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.2
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+ResNet50V2:
+  cuda:
+    jet1:
+      energy:
+        value: 9.2
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 5.7
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.8
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+ResNet50:
+  cuda:
+    jet1:
+      energy:
+        value: 7.9
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 5.5
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.6
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+DenseNet201:
+  cuda:
+    jet1:
+      energy:
+        value: 7.4
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 5.8
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.7
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+InceptionV3:
+  cuda:
+    jet1:
+      energy:
+        value: 8.0
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 5.9
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.7
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+Xception:
+  cuda:
+    jet1:
+      energy:
+        value: 7.6
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 6.0
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.5
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+InceptionResNetV2:
+  cuda:
+    jet1:
+      energy:
+        value: 6.4
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 5.9
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.3
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+VGG16:
+  cuda:
+    jet1:
+      energy:
+        value: 6.3
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 6.1
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.8
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+EfficientNetV2S:
+  cuda:
+    jet1:
+      energy:
+        value: 8.4
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 5.4
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.5
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+EfficientNetB0:
+  cuda:
+    jet1:
+      energy:
+        value: 4.7
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 5.1
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.2
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+EfficientNetB7:
+  cuda:
+    jet1:
+      energy:
+        value: 10.2
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 5.9
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.6
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+NASNetLarge:
+  cuda:
+    jet1:
+      energy:
+        value: 8.3
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 5.9
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.5
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+EfficientNetV2L:
+  cuda:
+    jet1:
+      energy:
+        value: 11.2
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  cpu:
+    jet1:
+      energy:
+        value: 5.5
+        unit: w/h
+      time:
+        value: 1
+        unit: hour
+  tpu:
+    coral1:
+      energy:
+        value: 4.8
+        unit: w/h
+      time:
+        value: 1
+        unit: hour

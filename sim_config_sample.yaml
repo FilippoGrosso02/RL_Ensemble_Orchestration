@@ -1,0 +1,110 @@
+distribution:
+  n01440764: 1
+  n01443537: 1
+  n01484850: 1
+  n01491361: 1
+  n01494475: 1
+  n01496331: 0
+  n01498041: 0
+  n01514668: 0
+  n01514859: 0
+  n01518878: 0
+  n01530575: 0
+  n01531178: 0
+  n01532829: 0
+  n01534433: 0
+  n01537544: 0
+  n01558993: 0
+  n01560419: 0
+  n01580077: 0
+  n01582220: 0
+  n01592084: 0
+ensemble:
+  host:
+    cuda: 1
+  response_time_range:
+    avg: 0.01
+    base_scale: 20
+    max: 0.02
+    min: 0.005
+    noise_scale: 10
+    spike_scale: 2
+  response_time_sim: 1
+  service_name: ensemble_01
+  service_type: ensemble
+inference:
+  DenseNet121:
+    data_path: /home/tringuyen/workspace/ccgrid_ex/source/profile/processed
+    energy:
+      cpu: 5.5
+      cuda: 6.0
+    host:
+      cuda: 1
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    mlmodel_name: DenseNet121
+    response_time:
+      cpu:
+        avg: 0.37077864743857236
+        max: 0.5649008750915527
+        min: 0.3080501556396484
+      cuda:
+        avg: 0.08970351503919573
+        max: 0.185699462890625
+        min: 0.0850656032562255
+    service_name: DenseNet121
+    service_type: inference
+    throughput:
+      cpu: 2.6970269375225335
+      cuda: 11.147835171933368
+    throughput_requirement: 15
+  DenseNet201:
+    data_path: /home/tringuyen/workspace/ccgrid_ex/source/profile/processed
+    energy:
+      cpu: 5.8
+      cuda: 7.4
+    host:
+      cuda: 1
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    mlmodel_name: DenseNet201
+    response_time:
+      cpu:
+        avg: 0.5838861006610798
+        max: 0.8330824375152588
+        min: 0.4933516979217529
+      cuda:
+        avg: 0.15158661080014174
+        max: 0.252490758895874
+        min: 0.1474027633666992
+    service_name: DenseNet201
+    service_type: inference
+    throughput:
+      cpu: 1.7126627930820637
+      cuda: 6.596888700931791
+    throughput_requirement: 15
+processing:
+  host:
+    cpu: 1
+  response_time_range:
+    avg: 0.003
+    base_scale: 30
+    max: 0.01
+    min: 0.0012
+    noise_scale: 20
+    spike_scale: 2
+  response_time_sim: 1
+  service_name: processing_01
+  service_type: processing

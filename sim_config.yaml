@@ -1,0 +1,272 @@
+distribution:
+  n01440764: 1
+  n01443537: 1
+  n01484850: 1
+  n01491361: 1
+  n01494475: 1
+  n01496331: 0
+  n01498041: 0
+  n01514668: 0
+  n01514859: 0
+  n01518878: 0
+  n01530575: 0
+  n01531178: 0
+  n01532829: 0
+  n01534433: 0
+  n01537544: 0
+  n01558993: 0
+  n01560419: 0
+  n01580077: 0
+  n01582220: 0
+  n01592084: 0
+ensemble:
+  host:
+    cpu: 1
+  response_time_range:
+    avg: 0.01
+    base_scale: 20
+    max: 0.02
+    min: 0.005
+    noise_scale: 10
+    spike_scale: 2
+  response_time_sim: 1
+  service_name: ensemble
+  service_type: ensemble
+inference:
+  DenseNet121:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: DenseNet121
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: DenseNet121
+  DenseNet201:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: DenseNet201
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: DenseNet201
+  EfficientNetB0:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: EfficientNetB0
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: EfficientNetB0
+  EfficientNetB7:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: EfficientNetB7
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: EfficientNetB7
+  EfficientNetV2L:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: EfficientNetV2L
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: EfficientNetV2L
+  EfficientNetV2S:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: EfficientNetV2S
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: EfficientNetV2S
+  InceptionResNetV2:
+    explainability: 1
+    host:
+      cuda: 1
+    mlmodel_name: InceptionResNetV2
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: InceptionResNetV2
+  InceptionV3:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: InceptionV3
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: InceptionV3
+  MobileNet:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: MobileNet
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: MobileNet
+  MobileNetV2:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: MobileNetV2
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: MobileNetV2
+  NASNetLarge:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: NASNetLarge
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: NASNetLarge
+  NASNetMobile:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: NASNetMobile
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: NASNetMobile
+  ResNet50:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: ResNet50
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: ResNet50
+  ResNet50V2:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: ResNet50V2
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: ResNet50V2
+  VGG16:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: VGG16
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: VGG16
+  Xception:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: Xception
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: Xception
+processing:
+  host:
+    cpu: 1
+  response_time_range:
+    avg: 0.003
+    base_scale: 30
+    max: 0.01
+    min: 0.0012
+    noise_scale: 20
+    spike_scale: 2
+  response_time_sim: 1
+  service_name: processing
+throughput_requirement: 15
