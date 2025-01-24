@@ -19,7 +19,7 @@ The user needs ML ensemble inference pipeline with:
 3. **Config File**: where the user specifies the structure of the cloud pipeline, its components and the utilized model.
 
 
-## RL Systems components
+## RL System components
 The main components of the RL add-on:
 
 1. **State Manager**
@@ -40,7 +40,7 @@ The main components of the RL add-on:
    - **Model RL**
      - Simulates ML inference based on the content specified in the YAML file.
 
-## Reward System and User-Defined Metrics
+## Reward Function and User-Defined Metrics
 The reward of the RL model is defined by the following formula:
 
 **Reward = Σ(αᵢ * f(xᵢ))**
