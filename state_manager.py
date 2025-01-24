@@ -171,6 +171,16 @@ class StateManager():
                     [self.model_profile_data[model_name]["data_frame"], result_df], ignore_index=True
                 )
 
+            # Ensure the output directory exists
+            output_dir = f"results/reinf_learning_inference/"
+            os.makedirs(output_dir, exist_ok=True)
+
+            # Save the last 10,000 rows to CSV
+            self.model_profile_data[model_name]["data_frame"].tail(10000).to_csv(
+                f"{output_dir}{model_name}_inference.csv", index=False
+            )
+
+
         return data
 
     def get_state(self):

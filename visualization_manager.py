@@ -5,7 +5,7 @@ from dash import dcc, html
 from dash.dependencies import Input, Output, State
 import plotly.graph_objs as go
 import threading
-
+import pandas as pd
 
 
 class VisualizationManager:
@@ -62,38 +62,43 @@ class VisualizationManager:
             writer = csv.writer(file)
             writer.writerow(row)
 
-    def _flatten_state(self, state):
-        """
-        Flatten the state dictionary into a list for CSV storage.
 
-        Args:
-            state (dict): The state dictionary containing metrics.
+    def flatten_dict(self,d, parent_key='', sep='_'):
+        """Recursively flattens a nested dictionary."""
+        items = []
+        for k, v in d.items():
+            new_key = f"{parent_key}{sep}{k}" if parent_key else k
+            if isinstance(v, dict):
+                items.extend(self.flatten_dict(v, new_key, sep=sep).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
 
-        Returns:
-            list: Flattened state as a single row.
-        """
-        ensemble_state = state["ensemble_state"]
-        model_states = state["model_states"]
-        input_state = state["input_state"]
+    def flatten_state_to_csv(self, state_dict):
 
-        # Extract ensemble and input state metrics
-        row = [
-            ensemble_state.get("total_energy_consumption", 0.0),
-            ensemble_state.get("ensemble_size", 0),
-            input_state[0],  # input_file_length
-            input_state[1],  # image_height
-            input_state[2],  # image_width
-        ]
+        """Flattens the given state dictionary and writes it to a CSV file."""
+        # Only consider the 'ensemble' model state
+        filtered_state = {
+            'ensemble_state': state_dict.get('ensemble_state', {}),
+            'model_states': {
+                'ensemble': state_dict.get('model_states', {}).get('ensemble', {})
+            },
+            'input_state': state_dict.get('input_state', {}),
+            'distribution_weights': state_dict.get('distribution_weights', [])
+        }
 
-        # Flatten model states (ensure fixed size for 10 models)
-        for model in model_states[:10]:
-            row.extend(model)
+        # Flatten the filtered state dictionary
+        flattened_state = self.flatten_dict(filtered_state)
 
-        # Add padding for missing models
-        for _ in range(10 - len(model_states)):
-            row.extend([0.0] * 5)
+        # Convert the flattened dictionary into a DataFrame
+        df = pd.DataFrame([flattened_state])
 
-        return row
+        # Write the DataFrame to a CSV file
+        try:
+            df.to_csv(self.csv_path, mode='a', header=not pd.io.common.file_exists(self.csv_path), index=False)
+            print(f"Flattened state appended to {self.csv_path}")
+        except Exception as e:
+            print(f"Error appending to CSV: {e}")
 
 
 

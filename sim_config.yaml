@@ -89,20 +89,6 @@ inference:
       spike_scale: 3
     response_time_sim: 1
     service_name: EfficientNetB7
-  EfficientNetV2L:
-    explainability: 0
-    host:
-      cpu: 1
-    mlmodel_name: EfficientNetV2L
-    response_time_range:
-      avg: 0.3
-      base_scale: 40
-      max: 0.5
-      min: 0.1
-      noise_scale: 20
-      spike_scale: 3
-    response_time_sim: 1
-    service_name: EfficientNetV2L
   EfficientNetV2S:
     explainability: 0
     host:
@@ -215,20 +201,6 @@ inference:
       spike_scale: 3
     response_time_sim: 1
     service_name: ResNet50
-  ResNet50V2:
-    explainability: 0
-    host:
-      cpu: 1
-    mlmodel_name: ResNet50V2
-    response_time_range:
-      avg: 0.3
-      base_scale: 40
-      max: 0.5
-      min: 0.1
-      noise_scale: 20
-      spike_scale: 3
-    response_time_sim: 1
-    service_name: ResNet50V2
   VGG16:
     explainability: 0
     host:
