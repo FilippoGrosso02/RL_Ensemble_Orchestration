@@ -1,12 +1,12 @@
-# Reinforcement Learning Ensemble Orcherstration
-The goal of this research is to develop a reinforcement learning (RL) component that can dynamically orchestrate a machine learning (ML) ensemble, optimizing for user-defined metrics. 
+# Reinforcement Learning ML Ensemble Orcherstration
+The goal of this research is to develop a **reinforcement learning (RL) component** that can dynamically orchestrate a **machine learning (ML) ensemble**, optimizing for user-defined metrics. 
 
 Specifically, the RL algorithm will help the ensemble adapt to changing input data distributions in the inference pipeline. 
 
-This RL system will be a modular add-on that can be configured through a text file, allowing it to integrate with various cloud-based pipelines.
+This RL system will be a **modular add-on** that can be configured through a text file, allowing it to integrate with various cloud-based pipelines.
 
 In this research, the performance of various RL models for orchestration will be evaluated and compared against traditional ensemble orchestration methods, including:
-- Constant ensembles
+- Constant ensemble
 - Random action
 - Algorithmic scoring
 
@@ -49,3 +49,8 @@ The inference metrics considered for now are:
 - **Explainability**
 - **Latency**
 - **Energy**
+
+## Potential future research
+
+- Developing **parallelized** reinforcement learning (RL) algorithms for improved scalability and efficiency.
+- Extending RL-based orchestration to manage other cloud-based systems, such as IoT devices, drones, and similar distributed architectures.
