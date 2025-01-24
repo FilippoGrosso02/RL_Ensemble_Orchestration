@@ -10,7 +10,7 @@ In this research, the performance of various RL models for orchestration will be
 - Random action
 - Algorithmic scoring
 
-![Graph Placeholder](#) <!-- Add your graph here -->
+![RL System Architecture](images/rl_system_architecture.png)
 
 ## Components
 The main components of the RL add-on:
