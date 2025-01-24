@@ -12,7 +12,14 @@ In this research, the performance of various RL models for orchestration will be
 
 ![RL System Architecture](images/RL_Orchestrator01.png)
 
-## Components
+## Prerequisites
+The user needs ML ensemble inference pipeline with:
+1. **Input Data**: for an optimal performance the data should labeled and provide an estimate of the distributions of labels in the data at any given moment.
+2. **Ml Ensemble**: a set of containerized ML models, for now the user needs to run each model individually before setting up the pipeline to get an estimate of the model's performance metrics.
+3. **Config File**: where the user specifies the structure of the cloud pipeline, its components and the utilized model.
+
+
+## RL Systems components
 The main components of the RL add-on:
 
 1. **State Manager**
