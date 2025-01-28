@@ -1,5 +1,6 @@
 import copy
 from math import log
+import json
 
 import pandas as pd
 
@@ -158,7 +159,9 @@ def score_estimation(ensemble: list, contract: dict):
     return result
 
 
-def rl_reward_estimation(performance_metrics: dict, contract: dict):
+def rl_reward_estimation(performance_metrics: dict, contract_path):
+    contract = read_contract(contract_path)
+    print(performance_metrics)
     """
     contract example:
     {
@@ -238,3 +241,9 @@ def rl_reward_estimation(performance_metrics: dict, contract: dict):
     
     return total_score
 
+def read_contract(json_path):
+    
+    with open(json_path, 'r') as file:
+        data = json.load(file)
+
+        return data

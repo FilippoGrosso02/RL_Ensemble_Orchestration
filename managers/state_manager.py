@@ -1,4 +1,6 @@
-from model_rl import ServiceConfig, ProcessingService, ServiceType, InferenceService, EnsembleService
+from managers.model_rl import ServiceConfig, ProcessingService, ServiceType, InferenceService, EnsembleService
+from managers.config_manager import ConfigManager
+
 import logging
 import os
 import time
@@ -8,7 +10,7 @@ import copy
 from collections import Counter
 from rohe.common import rohe_utils as utils
 from IPython.display import clear_output
-from config_manager import ConfigManager
+
 import yaml
 import numpy as np
 
@@ -16,8 +18,9 @@ import numpy as np
 class StateManager():
     def __init__(self, current_dir):
         # Initialize necessary variables
-
-        parent_dir = os.path.dirname(current_dir)
+        
+        self.current_dir = current_dir
+        self.parent_dir = os.path.dirname(current_dir)
         self.CONFIG_PATH = os.path.join(current_dir, "sim_config.yaml")
         self.PROFILE_PATH = os.path.join(current_dir, "profile/model_profile/model_profile.yaml")
         self.FILE_DATA_PATH = os.path.join(current_dir, "file_label.csv")
@@ -64,7 +67,7 @@ class StateManager():
 
         #Reload the initial YAML configuration file and set up data.
 
-        initial_yaml_file_path = "initial_sim_config.yaml"  # Ensure this path matches your desired location
+        initial_yaml_file_path = os.path.join(self.current_dir, "initial_sim_config.yaml")  # Ensure this path matches your desired location
 
         # Load contents from the initial YAML file
         with open(initial_yaml_file_path, "r") as initial_file:

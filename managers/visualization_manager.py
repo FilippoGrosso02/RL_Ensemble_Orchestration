@@ -9,14 +9,15 @@ import pandas as pd
 
 
 class VisualizationManager:
-    def __init__(self, csv_path=f"results/reinforcement_learning.csv"):
+    def __init__(self, current_dir, csv_path=f"results/reinforcement_learning.csv"):
         """
         Initialize the VisualizationManager.
 
         Args:
             csv_path (str): Path to the CSV file where states will be saved.
         """
-        self.csv_path = csv_path
+
+        self.csv_path = os.path.join(current_dir,csv_path)
 
         # Check if the file exists; if not, create it with headers
         if os.path.exists(self.csv_path):
