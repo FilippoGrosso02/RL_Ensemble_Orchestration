@@ -19,43 +19,39 @@ class VisualizationManager:
         self.csv_path = csv_path
 
         # Check if the file exists; if not, create it with headers
-        if not os.path.exists(self.csv_path):
-            with open(self.csv_path, mode="w", newline="") as file:
-                writer = csv.writer(file)
-                writer.writerow(self._get_headers())
+        if os.path.exists(self.csv_path):
+            os.remove(self.csv_path)
+        with open(self.csv_path, mode="w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(self._get_headers())
 
         self.reward_list = []
 
     def _get_headers(self):
-        """
-        Define the headers for the CSV file.
 
-        Returns:
-            list: List of column headers.
-        """
         headers = [
             "total_energy_consumption",
             "ensemble_size",
             "input_file_length",
             "image_height",
             "image_width",
+            "ensemble_accuracy",
+            "ensemble_confidence",
+            "ensemble_avg_response_time",
+            "ensemble_max_response_time",
+            "ensemble_contribution",
+            "reward",
+            "distribution_weights"
         ]
-
-        # Add headers for up to 10 models with 5 metrics each
-        for i in range(10):
-            headers.extend([f"model_{i}_metric_{j}" for j in range(5)])
 
         return headers
 
-    def add_state_to_csv(self, state):
-        """
-        Append a state dictionary as a row in the CSV file.
 
-        Args:
-            state (dict): The state dictionary containing metrics.
-        """
+
+    def add_state_to_csv(self, state):
+
         # Flatten the state dictionary into a single row
-        row = self._flatten_state(state)
+        row = list(self.flatten_state(state).values())
 
         # Write the row to the CSV file
         with open(self.csv_path, mode="a", newline="") as file:
@@ -63,42 +59,78 @@ class VisualizationManager:
             writer.writerow(row)
 
 
-    def flatten_dict(self,d, parent_key='', sep='_'):
-        """Recursively flattens a nested dictionary."""
-        items = []
-        for k, v in d.items():
-            new_key = f"{parent_key}{sep}{k}" if parent_key else k
-            if isinstance(v, dict):
-                items.extend(self.flatten_dict(v, new_key, sep=sep).items())
-            else:
-                items.append((new_key, v))
-        return dict(items)
+    def flatten_state(self,state, parent_key='', sep='_'):
+        """
+        STATE INFORMATION
+        The state is composed of the following components and keys:
 
-    def flatten_state_to_csv(self, state_dict):
+        1. Ensemble State (`ensemble_state`):
+        - `total_energy_consumption`: 0.01894598299398171
+        - `ensemble_size`: 14
 
-        """Flattens the given state dictionary and writes it to a CSV file."""
-        # Only consider the 'ensemble' model state
-        filtered_state = {
-            'ensemble_state': state_dict.get('ensemble_state', {}),
-            'model_states': {
-                'ensemble': state_dict.get('model_states', {}).get('ensemble', {})
-            },
-            'input_state': state_dict.get('input_state', {}),
-            'distribution_weights': state_dict.get('distribution_weights', [])
+        2. Model States (`model_states`):
+        - Contains individual model details with the following keys:
+            - `accuracy`: Model's accuracy in current inference tasks.
+            - `confidence`: Confidence level of the model's predictions.
+            - `avg_response_time`: Average response time of the model (in seconds).
+            - `max_response_time`: Maximum response time observed for the model (in seconds).
+            - `contribution`: Model's contribution to the ensemble.
+        - Example Models:
+            - **InceptionResNetV2**:
+                - `accuracy`: 0.88
+                - `confidence`: 0.8021299481391907
+                - `avg_response_time`: 2.0684926527844554
+                - `max_response_time`: 2.140760123997036
+                - `contribution`: 0.8157378768920899
+            - **MobileNetV2**:
+                - `accuracy`: 0.6666666666666666
+                - `confidence`: 0.515729824701945
+                - `avg_response_time`: 0.06555019974484746
+                - `max_response_time`: 0.10884077820269697
+                - `contribution`: 0.515729824701945
+            - **ResNet50V2**:
+                - `accuracy`: 1.0
+                - `confidence`: 0.5565559466679891
+                - `avg_response_time`: 0.11347026663042319
+                - `max_response_time`: 0.12229664638153938
+                - `contribution`: 0.5565559466679891
+            - **... (other models follow the same structure)**:
+            - **Ensemble Summary** (`ensemble`):
+                - `accuracy`: 0.96
+                - `confidence`: 0.82377298942463
+                - `avg_response_time`: 6.255583806121645
+                - `max_response_time`: 7.168263599886896
+                - `contribution`: 0.940839307308197
+
+        3. Input State (`input_state`):
+        - `input_file_length`: 15
+        - `image_height`: 224
+        - `image_width`: 224
+
+        4. Distribution Weights (`distribution_weights`):
+        - A list of weights applied to models during inference.
+        - Example: [1.0, 1.0, 1.0, 1.0, 1.0, 0.0, ..., 0.0]
+
+
+        """
+        flattened_state_with_weights = {
+        'total_energy_consumption': state['ensemble_state']['total_energy_consumption'],
+        'ensemble_size': state['ensemble_state']['ensemble_size'],
+        'input_file_length': state['input_state']['input_file_length'],
+        'image_height': state['input_state']['image_height'],
+        'image_width': state['input_state']['image_width'],
+        'ensemble_accuracy': state['model_states']['ensemble']['accuracy'],
+        'ensemble_confidence': state['model_states']['ensemble']['confidence'],
+        'ensemble_avg_response_time': state['model_states']['ensemble']['avg_response_time'],
+        'ensemble_max_response_time': state['model_states']['ensemble']['max_response_time'],
+        'ensemble_contribution': state['model_states']['ensemble']['contribution'],
+        'reward' : state['reward'],
+        'distribution_weights': state['distribution_weights']  # Add distribution weights
         }
 
-        # Flatten the filtered state dictionary
-        flattened_state = self.flatten_dict(filtered_state)
 
-        # Convert the flattened dictionary into a DataFrame
-        df = pd.DataFrame([flattened_state])
+        return flattened_state_with_weights
 
-        # Write the DataFrame to a CSV file
-        try:
-            df.to_csv(self.csv_path, mode='a', header=not pd.io.common.file_exists(self.csv_path), index=False)
-            print(f"Flattened state appended to {self.csv_path}")
-        except Exception as e:
-            print(f"Error appending to CSV: {e}")
 
 
 
@@ -145,4 +177,6 @@ class DashApp:
     def run(self, debug=True, **kwargs):
 
         self.app.run_server(debug=True, host="127.0.0.1", port=8000)
+        # find it here:
+        # http://127.0.0.1:8000
 

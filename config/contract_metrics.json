@@ -1,0 +1,51 @@
+
+
+{
+    "mlSpecific":{
+        "accuracy":{
+
+        "weight": 1,
+        "min_value": 0,
+        "max_value": 1,
+        "objective": "max",
+        "scale": "log",
+        "logbase": 2
+        },
+        "confidence": {
+
+        "weight": 1,
+        "min_value": 0,
+        "max_value": 1,
+        "objective": "max",
+        "scale": "log"
+        },
+
+        "latency": {
+
+        "weight": 1,
+        "min_value": 0.6,
+        "max_value": 0.99,
+        "objective": "min",
+        "scale": "log"
+        },
+
+        "energy": {
+
+        "weight": 1,
+        "min_value": 0.5,
+        "max_value": 0.95,
+        "objective": "min",
+        "scale": "log"
+        },
+
+        "explainability": {
+
+        "weight": 1,
+        "min_value": 0,
+        "max_value": 1,
+        "objective": "max",
+        "scale": "log"
+        }
+    }
+}
+
