@@ -9,23 +9,25 @@ import pandas as pd
 
 
 class VisualizationManager:
-    def __init__(self, current_dir, csv_path=f"results/reinforcement_learning.csv"):
-        """
-        Initialize the VisualizationManager.
+    def __init__(self, current_dir, csv_path=f"default"):
 
-        Args:
-            csv_path (str): Path to the CSV file where states will be saved.
-        """
+        # Construct the full directory path
+        self.csv_dir = os.path.join(current_dir, "results", csv_path)
+        self.csv_path = os.path.join(self.csv_dir, "reinforcement_learning.csv")
 
-        self.csv_path = os.path.join(current_dir,csv_path)
+        # Ensure the directory exists
+        os.makedirs(self.csv_dir, exist_ok=True)
 
-        # Check if the file exists; if not, create it with headers
+        # Remove the file if it already exists
         if os.path.exists(self.csv_path):
             os.remove(self.csv_path)
+
+        # Create a new CSV file with headers
         with open(self.csv_path, mode="w", newline="") as file:
             writer = csv.writer(file)
             writer.writerow(self._get_headers())
 
+        # Initialize reward list
         self.reward_list = []
 
     def _get_headers(self):
@@ -42,6 +44,7 @@ class VisualizationManager:
             "ensemble_max_response_time",
             "ensemble_contribution",
             "reward",
+            "action",
             "distribution_weights"
         ]
 
@@ -126,6 +129,7 @@ class VisualizationManager:
         'ensemble_max_response_time': state['model_states']['ensemble']['max_response_time'],
         'ensemble_contribution': state['model_states']['ensemble']['contribution'],
         'reward' : state['reward'],
+        'action' : state['action'],
         'distribution_weights': state['distribution_weights']  # Add distribution weights
         }
 
