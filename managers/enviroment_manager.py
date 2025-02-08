@@ -28,7 +28,9 @@ class SimulationEnv(gym.Env):
         self.dash_app = DashApp(self.visualization_manager)
 
         self.dash_app.run()
-
+        self.num_models = 4
+        self.min_models = 4
+        self.max_models = 10
         # Define constants
         self.state_size = self.state_manager.state_lenght # Change this to be dynamic based on the enviroment
         # Observation space: Fixed size of 55
@@ -37,7 +39,7 @@ class SimulationEnv(gym.Env):
         )
 
         # Action space (example: add/remove/replace a model)
-        self.action_space = spaces.Discrete(4)
+        self.action_space = spaces.Discrete(11)
 
         self.weights = {
             "accuracy": 1.0,
@@ -57,15 +59,19 @@ class SimulationEnv(gym.Env):
 
     def step(self, action):
         
-        if action == 0:
+        """ OLD 
+        if action == 0 :
             self.apply_action("keep_ensemble")
-        elif action == 1:
+        elif action == 1 and self.num_models < self.max_models:
             self.apply_action("add_model")
         elif action == 2:
             self.apply_action("replace_model")
-        elif action == 3:
+        elif action == 3 and self.num_models > self.min_models: 
             self.apply_action("remove_model")
-      
+        else:
+            self.apply_action("keep_ensemble")
+        """
+        self.apply_action(action)
         state = self.state_manager.get_state()
         print("STATE: ", state)
 
@@ -75,6 +81,7 @@ class SimulationEnv(gym.Env):
 
         state["reward"] = reward
         state["action"] = action
+        self.num_models = state["ensemble_state"]["ensemble_size"]
 
         self.visualization_manager.reward_list.append(reward)
         self.visualization_manager.add_state_to_csv(state)
@@ -102,7 +109,7 @@ class SimulationEnv(gym.Env):
 
         return reward
     
-    def apply_action(self, action):
+    def apply_action_old(self, action):
     
         weights = self.weights
         manager = self.config_manager
@@ -128,6 +135,32 @@ class SimulationEnv(gym.Env):
         elif action == "replace_random_model":
             manager.remove_random_model()
             manager.add_random_model()
+
+        else:
+            logging.warning("Unknown action")
+
+    def apply_action(self, action):
+        """
+        Apply an action based on the given numeric value:
+        - 0 to 4: Add a model corresponding to the index.
+        - 5 to 9: Remove a model corresponding to the index - 5.
+        - 10: Keep the ensemble as it is.
+        """
+        
+        weights = self.weights
+        manager = self.config_manager
+
+        if 0 <= action <= 4:
+            logging.info(f"Action: Adding model at index {action}")
+            manager.add_model_by_index(action)
+
+        elif 5 <= action <= 9:
+            model_index = action - 5
+            logging.info(f"Action: Removing model at index {model_index}")
+            if (self.num_models > 1): manager.remove_model_by_index(model_index)
+
+        elif action == 10:
+            logging.info("Action: Keeping the ensemble (no changes)")
 
         else:
             logging.warning("Unknown action")

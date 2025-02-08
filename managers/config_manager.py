@@ -133,7 +133,40 @@ class ConfigManager:
         model_name = random.choice(list(target_yaml['inference'].keys()))
         self.remove_model(model_name)
 
+    ### ADDING MODELS WITH INDICES
 
+    def add_model_by_index(self, index):
+        """Add a model from the model profiles based on its index in the list."""
+        model_profiles = self.load_yaml(self.model_profile_path)
+        if model_profiles is None or not model_profiles:
+            print("No models available in the model profiles.")
+            return
+
+        model_keys = list(model_profiles.keys())
+
+        if index < 0 or index >= len(model_keys):
+            print(f"Invalid index. Please provide a number between 0 and {len(model_keys) - 1}.")
+            return
+
+        model_name = model_keys[index]
+        self.add_model(model_name)
+    
+    def remove_model_by_index(self, index):
+        """Remove a model from the model profiles based on its index in the list."""
+        model_profiles = self.load_yaml(self.model_profile_path)
+        if model_profiles is None or not model_profiles:
+            print("No models available in the model profiles.")
+            return
+
+        model_keys = list(model_profiles.keys())
+
+        if index < 0 or index >= len(model_keys):
+            print(f"Invalid index. Please provide a number between 0 and {len(model_keys) - 1}.")
+            return
+
+        model_name = model_keys[index]
+        self.remove_model(model_name)
+        
     ### MODEL SCORING 
 
     def calculate_model_score(self, model_data: dict, weights: dict) -> float:
@@ -231,3 +264,5 @@ class ConfigManager:
         # Remove the worst model from the target YAML
         self.remove_model(worst_model_name)
 
+
+    

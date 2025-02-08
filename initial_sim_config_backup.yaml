@@ -13,6 +13,34 @@ ensemble:
   host:
     cpu: 1
 inference:
+  ResNet50V2:
+    explainability: 0
+    response_time_range:
+      max: 0.5
+      min: 0.1
+      avg: 0.3
+      base_scale: 40
+      spike_scale: 3
+      noise_scale: 20
+    response_time_sim: 1
+    service_name: ResNet50V2
+    host: 
+      tpu: 1
+    mlmodel_name: ResNet50V2
+  InceptionResNetV2:
+    explainability: 1
+    response_time_range:
+      max: 0.5
+      min: 0.1
+      avg: 0.3
+      base_scale: 40
+      spike_scale: 3
+      noise_scale: 20
+    response_time_sim: 1
+    service_name: InceptionResNetV2
+    host: 
+      cuda: 1
+    mlmodel_name: InceptionResNetV2
   MobileNetV2:
     explainability: 0
     response_time_range:

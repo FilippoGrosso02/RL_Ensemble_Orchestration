@@ -202,7 +202,7 @@ class StateManager():
         model_states = {}
         for model_name, model_data in self.model_profile_data.items():
             if "data_frame" in model_data:
-                recent_df = model_data["data_frame"].tail(10000)  # Use recent 10,000 entries
+                recent_df = model_data["data_frame"].tail(1)  # Use x recent entries
 
                 # Calculate metrics
                 accuracy = recent_df["accuracy"].mean()
