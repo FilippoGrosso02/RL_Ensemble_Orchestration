@@ -27,6 +27,7 @@ class StateManager():
         self.MODEL_DATA_PATH = os.path.join(current_dir, "profile/processed")
         self.FILE_DATA_PATH = os.path.join(current_dir, "file_label.csv")
         self.THROUGHPUT_REQUIREMENT = 15
+        self.step_index = 0
         
         self.profile_data = utils.load_config(self.PROFILE_PATH)
         self.data_file_label = pd.read_csv(self.FILE_DATA_PATH).groupby("label")
@@ -48,7 +49,7 @@ class StateManager():
         self.processing_service = None
         self.ensemble_service = None
         self.total_energy_consumption = 0
-
+        
         self.setup_config()
         
         self.state_lenght = self.setup_state()
@@ -64,10 +65,12 @@ class StateManager():
 
 
     def setup_config(self):
-
-        #Reload the initial YAML configuration file and set up data.
-
-        initial_yaml_file_path = os.path.join(self.current_dir, "initial_sim_config.yaml")  # Ensure this path matches your desired location
+        """
+        Reloads the initial YAML configuration file and sets up data,
+        including extracting model names and ensuring 'ensemble' is first.
+        """
+        # Reload the initial YAML configuration file
+        initial_yaml_file_path = os.path.join(self.current_dir, "initial_sim_config.yaml")
 
         # Load contents from the initial YAML file
         with open(initial_yaml_file_path, "r") as initial_file:
@@ -83,7 +86,17 @@ class StateManager():
         self.profile_data = utils.load_config(self.PROFILE_PATH)
         self.data_file_label = pd.read_csv(self.FILE_DATA_PATH).groupby("label")
         self.labels = list(self.data_file_label.groups.keys())
+
+        # Extract model names from profile_data and ensure 'ensemble' is first
+        model_names = list(self.profile_data.keys())  # Extract model names
+        if "ensemble" in model_names:
+            model_names.remove("ensemble")  # Ensure 'ensemble' isn't duplicated
+        self.model_names = ["ensemble"] + model_names  # Prepend 'ensemble'
+
         self.model_profile_data = {}
+
+        print(f"Model order set: {self.model_names}")
+
 
     
     #def state_step():
@@ -126,11 +139,10 @@ class StateManager():
                 inference_service = InferenceService(inference_service_config)
                 self.ensemble_service.add_model(inference_service)
 
-    def random_data_metrics(self):
+    def random_data_metrics(self, num_samples = 100):
         # Perform the inference on a random data sampled from the distribution
 
-        # Ensure the pipeline is configured
-        self.config_pipeline()
+        self.step_index
 
         model_count = 0
         # Prepare input data: 224-224
@@ -147,6 +159,7 @@ class StateManager():
         # Execute services
         data = self.processing_service.execute(data)
         data = self.ensemble_service.execute(data)
+        
 
         # Update model profiles
         for model_name, inferences in data["ml_inference"].items():
@@ -179,60 +192,71 @@ class StateManager():
             os.makedirs(output_dir, exist_ok=True)
 
             # Save the last 10,000 rows to CSV
-            self.model_profile_data[model_name]["data_frame"].tail(10000).to_csv(
-                f"{output_dir}{model_name}_inference.csv", index=False
-            )
+            if (self.step_index % num_samples == 0):
+                self.model_profile_data[model_name]["data_frame"].tail(num_samples).to_csv(
+                    f"{output_dir}{model_name}_inference.csv",     
+                    
 
+                )
 
+        
         return data
 
-    def get_state(self):
-    # Generates state vector based on the current inference metrics
+    def get_state(self, num_samples=100):
+        """
+        Generates a structured state vector with a fixed model order.
+        If a model is missing, its slot is replaced with a padding entry.
+        """
 
-        data = self.random_data_metrics()
+        self.config_pipeline()
 
-        # Ensemble-level metrics
+        for i in range(num_samples):
+            data = self.random_data_metrics(num_samples)
+        
+        
+
         energy_report = self.ensemble_service.energy_estimate()
         ensemble_state = {
             "total_energy_consumption": self.total_energy_consumption + energy_report["ensemble"],
             "ensemble_size": len(self.ensemble_service.ensemble),
         }
 
-        # Model-level metrics
+        # Ensure self.model_order exists (should be set in setup_config)
+        if not hasattr(self, "model_names"):
+            raise AttributeError("self.model_order is not defined. Make sure to call setup_config() first.")
+
+        # Model-level metrics (fixed order)
         model_states = {}
-        for model_name, model_data in self.model_profile_data.items():
-            if "data_frame" in model_data:
-                recent_df = model_data["data_frame"].tail(1)  # Use x recent entries
 
-                # Calculate metrics
-                accuracy = recent_df["accuracy"].mean()
-                confidence = recent_df["confidence"].mean()
-                avg_response_time = recent_df["response_time"].mean()
-                max_response_time = recent_df["response_time"].max()
-                contribution = recent_df["contribution"].mean()
+        for model_name in self.model_names:  # Iterate in locked order
+            
+            if (model_name in self.model_profile_data and model_name in self.ensemble_service.ensemble.keys()) or model_name == "ensemble":
+                model_data = self.model_profile_data[model_name]
 
-                # Store metrics in a dictionary with keys
-                model_states[model_name] = {
-                    "accuracy": accuracy,
-                    "confidence": confidence,
-                    "avg_response_time": avg_response_time,
-                    "max_response_time": max_response_time,
-                    "contribution": contribution,
-                }
+                if "data_frame" in model_data:
+                    recent_df = model_data["data_frame"].tail(num_samples)
 
-        # Ensure fixed-length state for 10 models by padding with empty dictionaries
-        max_models = 10
-        while len(model_states) < max_models:
-            model_states[f"padding_model_{len(model_states)+1}"] = {
-                "accuracy": 0.0,
-                "confidence": 0.0,
-                "avg_response_time": 0.0,
-                "max_response_time": 0.0,
-                "contribution": 0.0,
+                    # Calculate metrics
+                    accuracy = recent_df["accuracy"].mean()
+                    confidence = recent_df["confidence"].mean()
+                    avg_response_time = recent_df["response_time"].mean()
+                    max_response_time = recent_df["response_time"].max()
+                    contribution = recent_df["contribution"].mean()
+                else:
+                    # If model has no recorded data, use default values
+                    accuracy = confidence = avg_response_time = max_response_time = contribution = 0.0
+            else:
+                # If model is missing, fill with padding values
+                accuracy = confidence = avg_response_time = max_response_time = contribution = 0.0
+
+            # Store model metrics in a fixed order
+            model_states[model_name] = {
+                "accuracy": accuracy,
+                "confidence": confidence,
+                "avg_response_time": avg_response_time,
+                "max_response_time": max_response_time,
+                "contribution": contribution,
             }
-
-        # Limit the model states to 10 models (truncate if necessary)
-        model_states = dict(list(model_states.items())[:max_models])
 
         # Input state (flattened input metrics)
         input_state = {
@@ -240,7 +264,7 @@ class StateManager():
             "image_height": data["input"]["image_height"],
             "image_width": data["input"]["image_width"],
         }
-        
+
         structured_state = {
             "ensemble_state": ensemble_state,
             "model_states": model_states,

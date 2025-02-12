@@ -45,7 +45,8 @@ class VisualizationManager:
             "ensemble_contribution",
             "reward",
             "action",
-            "distribution_weights"
+            "distribution_weights",
+            "models"
         ]
 
         return headers
@@ -130,7 +131,8 @@ class VisualizationManager:
         'ensemble_contribution': state['model_states']['ensemble']['contribution'],
         'reward' : state['reward'],
         'action' : state['action'],
-        'distribution_weights': state['distribution_weights']  # Add distribution weights
+        'distribution_weights': state['distribution_weights'], # Add distribution weights
+        'models' : state['models']
         }
 
 

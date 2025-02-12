@@ -12,7 +12,7 @@ from gym import spaces
 
 class SimulationEnv(gym.Env):
 
-    def __init__(self, path_name):
+    def __init__(self, path_name, num_inferences = 100):
         super(SimulationEnv, self).__init__()
 
         current_dir = os.getcwd()   
@@ -30,7 +30,8 @@ class SimulationEnv(gym.Env):
         self.dash_app.run()
         self.num_models = 4
         self.min_models = 4
-        self.max_models = 10
+        self.max_models = 6
+        self.num_inferences = num_inferences
         # Define constants
         self.state_size = self.state_manager.state_lenght # Change this to be dynamic based on the enviroment
         # Observation space: Fixed size of 55
@@ -72,7 +73,7 @@ class SimulationEnv(gym.Env):
             self.apply_action("keep_ensemble")
         """
         self.apply_action(action)
-        state = self.state_manager.get_state()
+        state = self.state_manager.get_state(num_samples = self.num_inferences)
         print("STATE: ", state)
 
         # Simulate a step in the environment
@@ -82,6 +83,7 @@ class SimulationEnv(gym.Env):
         state["reward"] = reward
         state["action"] = action
         self.num_models = state["ensemble_state"]["ensemble_size"]
+        state["models"] = list(self.state_manager.ensemble_service.ensemble.keys())
 
         self.visualization_manager.reward_list.append(reward)
         self.visualization_manager.add_state_to_csv(state)

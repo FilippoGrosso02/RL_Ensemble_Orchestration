@@ -33,11 +33,11 @@ ensemble:
   service_name: ensemble
   service_type: ensemble
 inference:
-  DenseNet121:
+  EfficientNetV2S:
     explainability: 0
     host:
       cpu: 1
-    mlmodel_name: DenseNet121
+    mlmodel_name: EfficientNetV2S
     response_time_range:
       avg: 0.3
       base_scale: 40
@@ -46,7 +46,21 @@ inference:
       noise_scale: 20
       spike_scale: 3
     response_time_sim: 1
-    service_name: DenseNet121
+    service_name: EfficientNetV2S
+  NASNetLarge:
+    explainability: 0
+    host:
+      cpu: 1
+    mlmodel_name: NASNetLarge
+    response_time_range:
+      avg: 0.3
+      base_scale: 40
+      max: 0.5
+      min: 0.1
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: NASNetLarge
 processing:
   host:
     cpu: 1
