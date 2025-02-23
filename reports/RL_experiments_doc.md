@@ -14,5 +14,20 @@ Best performing models: 1. EfficientNetV2S, 2. Nas NETLarge
 
 We want to check if overtime the model learns to include the models with the highest accuracy and discard the ones with less accuracy over time.
 
+## Strategy:
+
+- To follow the normalization of reward we set the 0 reward to an average value of 0.9 so that bad results will be negative
+
+- Each step corresponds to 100 inferences
+
+
+
+
+## Test 1: standard parameters (256 num_steps, 20 model updates)
+
+Results are found in the /results/ppo/reinforcement_learning_acc_1302 file
+
+
+
 
 
