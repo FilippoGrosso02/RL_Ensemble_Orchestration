@@ -1,15 +1,16 @@
 from managers.model_rl import ServiceConfig, ProcessingService, ServiceType, InferenceService, EnsembleService
 from managers.config_manager import ConfigManager
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
-import logging
+#import logging
 import os
-import time
+#import time
 import pandas as pd
 import random
 import copy
 from collections import Counter
 from rohe.common import rohe_utils as utils
-from IPython.display import clear_output
+#from IPython.display import clear_output
 
 import yaml
 import numpy as np
@@ -139,12 +140,7 @@ class StateManager():
                 inference_service = InferenceService(inference_service_config)
                 self.ensemble_service.add_model(inference_service)
 
-    def random_data_metrics(self, num_samples = 100):
-        # Perform the inference on a random data sampled from the distribution
-
-        self.step_index
-
-        model_count = 0
+    def data_metrics(self):
         # Prepare input data: 224-224
         data = copy.deepcopy(self.init_data)
 
@@ -160,18 +156,27 @@ class StateManager():
         data = self.processing_service.execute(data)
         data = self.ensemble_service.execute(data)
         
-
-        # Update model profiles
+        return data
+        
+    
+    def model_inference_local(self):
+        data = self.data_metrics()
+        # Create a local dict to store results for each model
+        local_results = {}
+        
+        # Iterate through the models in the ml_inference result
         for model_name, inferences in data["ml_inference"].items():
-            model_count += 1
-            response_time = data["response_time"]["inference"].get(model_name, 0)
 
+            # Retrieve the response time for the current model
+            response_time = data["response_time"]["inference"].get(model_name, 0)
+            
+            # Compute metrics based on the ground truth label and model's inferences
             i_label = data["label"]
             i_accuracy = 1 if i_label in inferences else 0
             i_confidence = inferences.get(i_label, 0)
             model_contribution = data["contribution"].get(model_name, 0)
-
-            # Save to profile data
+            
+            # Create a dictionary with the computed metrics
             data_dict = {
                 "label": [i_label],
                 "accuracy": [i_accuracy],
@@ -179,41 +184,49 @@ class StateManager():
                 "response_time": [response_time],
                 "contribution": [model_contribution],
             }
+            
+            # Convert the dictionary to a DataFrame for this model
             result_df = pd.DataFrame(data_dict)
-            if model_name not in self.model_profile_data:
-                self.model_profile_data[model_name] = {"data_frame": result_df}
+            
+            # If results already exist for the model, append the new data; otherwise, initialize
+            if model_name in local_results:
+                local_results[model_name] = pd.concat(
+                    [local_results[model_name], result_df], ignore_index=True
+                )
             else:
-                self.model_profile_data[model_name]["data_frame"] = pd.concat(
-                    [self.model_profile_data[model_name]["data_frame"], result_df], ignore_index=True
-                )
+                local_results[model_name] = result_df
+                
+        # Return the local results dictionary, where each key is a model name and the value is a DataFrame
+        return local_results
+    
+    def parallel_model_inference(self,  num_samples=100, workers=10):
+        self.model_profile_data = {}
+        local_results_list = []
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            futures = [executor.submit(self.model_inference_local)
+                    for _ in range(num_samples)]
+            for future in as_completed(futures):
+                local_results_list.append(future.result())
 
-            # Ensure the output directory exists
-            output_dir = f"results/reinf_learning_inference/"
-            os.makedirs(output_dir, exist_ok=True)
-
-            # Save the last 10,000 rows to CSV
-            if (self.step_index % num_samples == 0):
-                self.model_profile_data[model_name]["data_frame"].tail(num_samples).to_csv(
-                    f"{output_dir}{model_name}_inference.csv",     
-                    
-
-                )
-
-        
-        return data
-
-    def get_state(self, num_samples=100):
+        # Merge local results into self.model_profile_data
+        for local_results in local_results_list:
+            for model_name, df in local_results.items():
+                if model_name not in self.model_profile_data:
+                    self.model_profile_data[model_name] = {"data_frame": df}
+                else:
+                    self.model_profile_data[model_name]["data_frame"] = pd.concat(
+                        [self.model_profile_data[model_name]["data_frame"], df], ignore_index=True
+                    )
+        return self.model_profile_data
+    
+    def get_state(self, num_samples=100, parallel_workers = 10):
         """
         Generates a structured state vector with a fixed model order.
         If a model is missing, its slot is replaced with a padding entry.
         """
-
         self.config_pipeline()
-
-        for i in range(num_samples):
-            data = self.random_data_metrics(num_samples)
-        
-        
+        #data = self.data_metrics()
+        self.parallel_model_inference(num_samples, parallel_workers)
 
         energy_report = self.ensemble_service.energy_estimate()
         ensemble_state = {
@@ -234,9 +247,10 @@ class StateManager():
                 model_data = self.model_profile_data[model_name]
 
                 if "data_frame" in model_data:
+                    
                     recent_df = model_data["data_frame"].tail(num_samples)
 
-                    # Calculate metrics
+                    # Calculate average metrics
                     accuracy = recent_df["accuracy"].mean()
                     confidence = recent_df["confidence"].mean()
                     avg_response_time = recent_df["response_time"].mean()
@@ -257,12 +271,13 @@ class StateManager():
                 "max_response_time": max_response_time,
                 "contribution": contribution,
             }
-
+        
+        sample_data = self.data_metrics()
         # Input state (flattened input metrics)
         input_state = {
-            "input_file_length": len(data["input"]["file_name"]),  # Example input length
-            "image_height": data["input"]["image_height"],
-            "image_width": data["input"]["image_width"],
+            "input_file_length": len(sample_data["input"]["file_name"]),  # Example input length
+            "image_height": sample_data["input"]["image_height"],
+            "image_width": sample_data["input"]["image_width"],
         }
 
         structured_state = {

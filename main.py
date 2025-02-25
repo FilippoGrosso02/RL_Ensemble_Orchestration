@@ -10,7 +10,7 @@ args = parser.parse_args()
 
 MODEL_PATH = "simulation_policy.zip"
 
-# Create the environment with the provided path_name
+
 env = SimulationEnv(path_name=args.path_name, num_inferences=100)
 
 if os.path.exists(MODEL_PATH):
@@ -20,8 +20,8 @@ else:
     print("No saved model found. Training a new one...")
     model = PPO("MlpPolicy", env, verbose=1, n_steps=256)
 
-# Train the agent
+
 model.learn(total_timesteps=5120)
 
-# Save the trained model
+
 model.save("simulation_policy")

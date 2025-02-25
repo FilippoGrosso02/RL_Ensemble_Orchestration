@@ -9,10 +9,11 @@ from managers.config_manager import ConfigManager
 
 import gym
 from gym import spaces
+from gym.utils import seeding
 
 class SimulationEnv(gym.Env):
 
-    def __init__(self, path_name, num_inferences = 100):
+    def __init__(self, path_name, num_inferences = 100, parallel_workers = 10):
         super(SimulationEnv, self).__init__()
 
         current_dir = os.getcwd()   
@@ -27,11 +28,11 @@ class SimulationEnv(gym.Env):
         self.visualization_manager = VisualizationManager(current_dir, path_name)
         self.dash_app = DashApp(self.visualization_manager)
 
-        self.dash_app.run()
-        self.num_models = 4
-        self.min_models = 4
-        self.max_models = 6
+        #self.dash_app.run()
+        self.num_models = 1
+
         self.num_inferences = num_inferences
+        self.parallel_workers = parallel_workers
         # Define constants
         self.state_size = self.state_manager.state_lenght # Change this to be dynamic based on the enviroment
         # Observation space: Fixed size of 55
@@ -49,6 +50,15 @@ class SimulationEnv(gym.Env):
             "energy": 0.0,
             "explainability": 0.0
         }
+        self.step_count = 0
+        self.seed()
+
+    def seed(self, seed=None):
+        """Set the seed for this environment's random number generator."""
+        self.np_random, seed = seeding.np_random(seed)
+        self.seed_value = seed 
+        return [seed]
+
 
     def reset(self):
         # Reset the environment to an initial state
@@ -60,21 +70,10 @@ class SimulationEnv(gym.Env):
 
     def step(self, action):
         
-        """ OLD 
-        if action == 0 :
-            self.apply_action("keep_ensemble")
-        elif action == 1 and self.num_models < self.max_models:
-            self.apply_action("add_model")
-        elif action == 2:
-            self.apply_action("replace_model")
-        elif action == 3 and self.num_models > self.min_models: 
-            self.apply_action("remove_model")
-        else:
-            self.apply_action("keep_ensemble")
-        """
+        self.step_count += 1
         self.apply_action(action)
-        state = self.state_manager.get_state(num_samples = self.num_inferences)
-        print("STATE: ", state)
+        state = self.state_manager.get_state(num_samples = self.num_inferences, parallel_workers=self.parallel_workers)
+        #print("STATE: ", state)
 
         # Simulate a step in the environment
         self.current_state = state
@@ -87,9 +86,9 @@ class SimulationEnv(gym.Env):
 
         self.visualization_manager.reward_list.append(reward)
         self.visualization_manager.add_state_to_csv(state)
-        self.dash_app.update_graph()
 
-        print("REWARD: ", reward)
+
+        logging.info("Step: %d | Env seed: %s | Reward: %s", self.step_count, self.seed_value, reward)
 
         done = False  # Define termination condition if applicable
         
@@ -111,36 +110,7 @@ class SimulationEnv(gym.Env):
 
         return reward
     
-    def apply_action_old(self, action):
-    
-        weights = self.weights
-        manager = self.config_manager
-        if action == "keep_ensemble":
-            logging.info("Action: Keeping the ensemble")
-        
-        elif action == "add_model":
-            manager.add_best_model(weights)
-            logging.info("Action: Adding a model")
-            # Logic for adding a new model (Placeholder)
-        elif action == "replace_model":
-            logging.info("Action: Replacing a model")
-            manager.remove_worst_model(weights)
-            manager.add_best_model(weights)
-            # Logic for replacing a model (Placeholder)
-        elif action == "remove_model":
-            manager.remove_worst_model(weights)
-
-        elif action == "add_random_model":
-            manager.add_random_model()
-        elif action == "remove_random_model":
-            manager.remove_random_model()
-        elif action == "replace_random_model":
-            manager.remove_random_model()
-            manager.add_random_model()
-
-        else:
-            logging.warning("Unknown action")
-
+  
     def apply_action(self, action):
         """
         Apply an action based on the given numeric value:

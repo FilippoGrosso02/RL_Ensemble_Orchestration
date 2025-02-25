@@ -21,11 +21,26 @@ We want to check if overtime the model learns to include the models with the hig
 - Each step corresponds to 100 inferences
 
 
-
-
-## Test 1: standard parameters (256 num_steps, 20 model updates)
+## Example Test 1: standard parameters (256 num_steps, 20 model updates)
 
 Results are found in the /results/ppo/reinforcement_learning_acc_1302 file
+
+
+# PPO hyper-parameters
+
+We want to see how varying these hyperparameters affect the convergence of the model:
+
+- Learning rate: the step size for the optimizer
+
+- Batch size: the amount of steps before eeach update in the model's policy
+
+- Gamma: discount factor on future rewards
+
+- Clip_range: clipping the gradient
+
+## Parallelization: number of enviroments
+
+We want to explore the possibility of increasing the number of enviroments to speed up the training process
 
 
 
