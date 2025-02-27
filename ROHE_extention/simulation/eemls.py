@@ -22,11 +22,15 @@ class EEMLSSimulation():
         self.model_record_path = os.path.join(parent_dir, sim_config["model_record_path"])
         self.output_path = os.path.join(parent_dir, sim_config["output_path"])
         self.throughput_requirement = 15
+        self.num_models = sim_config["num_models"]
+        self.max_models = sim_config["max_models"]
+        self.min_models = sim_config["min_models"]
         self.step_index = 0
         
         self.model_profile_data = rohe_utils.load_config(self.profile_path)
         self.label_data = pd.read_csv(self.label_path).groupby("label")
         self.labels = self.label_data.groups.keys()
+        
         model_names = list(self.model_profile_data.keys())
         if "ensemble" in model_names:
             model_names.remove("ensemble")
@@ -40,7 +44,7 @@ class EEMLSSimulation():
         self.ensemble_service = None
         self.total_energy_consumption = 0
         self.structured_state = {}
-        self.flatten_structured_state = []
+        self.flatten_state = []
         self.state_length = self.get_state_length()
     
     def get_state_length(self):
@@ -140,6 +144,7 @@ class EEMLSSimulation():
             if (self.step_index % num_inferences == 0):
                 self.model_profile_rt[model_name]["data_frame"].tail(num_inferences).to_csv(
                     f"{self.output_path}{model_name}_inference.csv")
+        
         return data
         
     
@@ -160,10 +165,16 @@ class EEMLSSimulation():
 
         # Model-level metrics (fixed order)
         model_states = {}
-        print(self.ensemble_service.ensemble.keys())
-        print(self.model_profile_rt.keys())
-        for model_name in self.model_names:  # Iterate in locked order
-            
+        
+        
+        for i in range(self.max_models+1):
+            if i < len(self.ensemble_service.ensemble.keys()):
+                model_name = list(self.ensemble_service.ensemble.keys())[i]
+            elif i == len(self.ensemble_service.ensemble.keys()):
+                model_name = "ensemble"
+            else:
+                model_name = f"empty_{i}"
+                
             if (model_name in self.model_profile_rt and model_name in self.ensemble_service.ensemble.keys()) or model_name == "ensemble":
                 
                 model_data = self.model_profile_rt[model_name]
@@ -208,6 +219,7 @@ class EEMLSSimulation():
         if hasattr(self, "distribution_weights") and isinstance(self.distribution_weights, (list, np.ndarray)):
             structured_state["distribution_weights"] = list(map(np.float32, self.distribution_weights))
         self.structured_state = structured_state
+        print("STATE: ", structured_state)
         return structured_state
     
     def flatten_structured_state(self, structured_state=None):
@@ -235,7 +247,6 @@ class EEMLSSimulation():
             ])
         # Flatten input state
         input_state_vector = [
-            np.float32(structured_state["input_state"].get("input_file_length", 0)),
             np.float32(structured_state["input_state"].get("image_height", 0)),
             np.float32(structured_state["input_state"].get("image_width", 0))
         ]
@@ -247,7 +258,7 @@ class EEMLSSimulation():
         # Combine all parts into a single flattened array
         flattened_state = np.concatenate([
             np.array(ensemble_state_vector, dtype=np.float32),
-            np.array(model_states_vector, dtype=np.float32),
-            np.array(input_state_vector, dtype=np.float32)
+            np.array(input_state_vector, dtype=np.float32),
+            np.array(model_states_vector, dtype=np.float32)
         ])
         return flattened_state

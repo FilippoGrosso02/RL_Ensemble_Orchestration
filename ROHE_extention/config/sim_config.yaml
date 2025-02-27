@@ -1,10 +1,10 @@
 distribution:
-  n01440764: 1
-  n01443537: 1
-  n01484850: 1
-  n01491361: 1
+  n01440764: 100
+  n01443537: 11
+  n01484850: 50
+  n01491361: 100
   n01494475: 0
-  n01496331: 1
+  n01496331: 20
   n01498041: 0
   n01514668: 0
   n01514859: 0
@@ -33,44 +33,58 @@ ensemble:
   service_name: ensemble
   service_type: ensemble
 inference:
+  EfficientNetB7:
+    explainability: 0
+    host:
+      cuda: 1
+    mlmodel_name: EfficientNetB7
+    response_time_range:
+      avg: 0.5544214251391385
+      base_scale: 40
+      max: 0.7307844161987305
+      min: 0.3234283924102783
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: EfficientNetB7
   EfficientNetV2S:
     explainability: 0
     host:
-      cpu: 1
+      cuda: 1
     mlmodel_name: EfficientNetV2S
     response_time_range:
-      avg: 0.3
+      avg: 0.23081557921941767
       base_scale: 40
-      max: 0.5
-      min: 0.1
+      max: 0.3144452571868896
+      min: 0.2253203392028808
       noise_scale: 20
       spike_scale: 3
     response_time_sim: 1
     service_name: EfficientNetV2S
-  MobileNetV2:
+  InceptionResNetV2:
     explainability: 0
     host:
-      cpu: 1
-    mlmodel_name: MobileNetV2
+      cuda: 1
+    mlmodel_name: InceptionResNetV2
     response_time_range:
-      avg: 0.3
+      avg: 0.9939665740492654
       base_scale: 40
-      max: 0.5
-      min: 0.1
+      max: 1.1470754146575928
+      min: 0.9842898845672609
       noise_scale: 20
       spike_scale: 3
     response_time_sim: 1
-    service_name: MobileNetV2
+    service_name: InceptionResNetV2
   NASNetLarge:
     explainability: 0
     host:
-      cpu: 1
+      cuda: 1
     mlmodel_name: NASNetLarge
     response_time_range:
-      avg: 0.3
+      avg: 1.3722617124256336
       base_scale: 40
-      max: 0.5
-      min: 0.1
+      max: 1.461817741394043
+      min: 1.3610644340515137
       noise_scale: 20
       spike_scale: 3
     response_time_sim: 1

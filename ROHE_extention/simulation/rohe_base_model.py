@@ -340,8 +340,6 @@ class EnsembleService(BaseService):
                 explainability=model_config.get("explainability", 0)
             )
 
-            # Print the loaded service configuration
-            print(service_config)
             
             # Instantiate the InferenceService and add it to the ensemble
             inference_service = InferenceService(config=service_config)

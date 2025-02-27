@@ -13,6 +13,7 @@ from rutils import rl_reward_estimation
 from RL.visualize import VisualizationManager, DashApp
 from RL.ensemble import RoheEnsemble
 from simulation.eemls import EEMLSSimulation
+DISTRIBUTION_LENGHT = 20
 
 
     
@@ -22,6 +23,9 @@ class EEMLSEnv(gym.Env):
         super(EEMLSEnv, self).__init__()
         
         sim_config = env_config["sim_config"]
+        sim_config["num_models"] = env_config["num_models"]
+        sim_config["max_models"] = env_config["max_models"]
+        sim_config["min_models"] = env_config["min_models"]
         self.eemlse_simulation = EEMLSSimulation(sim_config)
         self.experiment_id = env_config["experiment_id"]
         self.ensemble_manager = RoheEnsemble(os.path.join(parent_dir, sim_config["profile_path"]), os.path.join(parent_dir, sim_config["config_path"]))
@@ -34,11 +38,11 @@ class EEMLSEnv(gym.Env):
         self.max_models = env_config["max_models"]
         self.num_models = env_config["num_models"]
         self.num_inferences = env_config["num_inferences"]
-        self.state_size = self.eemlse_simulation.state_length
+        self.state_size = 4 + DISTRIBUTION_LENGHT + (self.max_models+1) * 5
         self.observation_space = spaces.Box(
             low=0.0, high=10.0, shape=(self.state_size,), dtype=np.float32
         )
-        self.action_space = spaces.Discrete(11)
+        self.action_space = spaces.Discrete(4)
         self.weights = env_config["weights"]
         
     def reset(self):
@@ -50,7 +54,6 @@ class EEMLSEnv(gym.Env):
     
     def step(self, action):
         
-        """ OLD 
         if action == 0 :
             self.apply_action("keep_ensemble")
         elif action == 1 and self.num_models < self.max_models:
@@ -61,10 +64,10 @@ class EEMLSEnv(gym.Env):
             self.apply_action("remove_model")
         else:
             self.apply_action("keep_ensemble")
-        """
-        self.apply_action(action)
+        # self.apply_action(action)
+        
         state = self.eemlse_simulation.step_inference(num_inferences = self.num_inferences)
-        print("STATE: ", state)
+        # print("STATE: ", state)
 
         # Simulate a step in the environment
         self.current_state = state
@@ -79,7 +82,7 @@ class EEMLSEnv(gym.Env):
         self.visualization_manager.add_state_to_csv(state)
         self.dash_app.update_graph()
 
-        print("REWARD: ", reward)
+        # print("REWARD: ", reward)
 
         done = False  # Define termination condition if applicable
         
@@ -101,7 +104,7 @@ class EEMLSEnv(gym.Env):
 
         return reward
     
-    def apply_action_old(self, action):
+    def apply_action(self, action):
     
         weights = self.weights
         eemls_ensemble = self.ensemble_manager
@@ -129,30 +132,30 @@ class EEMLSEnv(gym.Env):
             eemls_ensemble.add_random_model()
 
         else:
-            logging.warning("Unknown action")
+            logging.warning(f"Unknown action: {action}")
 
-    def apply_action(self, action):
-        """
-        Apply an action based on the given numeric value:
-        - 0 to 4: Add a model corresponding to the index.
-        - 5 to 9: Remove a model corresponding to the index - 5.
-        - 10: Keep the ensemble as it is.
-        """
+    # def apply_action(self, action):
+    #     """
+    #     Apply an action based on the given numeric value:
+    #     - 0 to 4: Add a model corresponding to the index.
+    #     - 5 to 9: Remove a model corresponding to the index - 5.
+    #     - 10: Keep the ensemble as it is.
+    #     """
         
-        weights = self.weights
-        eemls_ensemble = self.ensemble_manager
+    #     weights = self.weights
+    #     eemls_ensemble = self.ensemble_manager
 
-        if 0 <= action <= 4:
-            logging.info(f"Action: Adding model at index {action}")
-            eemls_ensemble.add_model_by_index(action)
+    #     if 0 <= action <= 4:
+    #         logging.info(f"Action: Adding model at index {action}")
+    #         eemls_ensemble.add_model_by_index(action)
 
-        elif 5 <= action <= 9:
-            model_index = action - 5
-            logging.info(f"Action: Removing model at index {model_index}")
-            if (self.num_models > 1): eemls_ensemble.remove_model_by_index(model_index)
+    #     elif 5 <= action <= 9:
+    #         model_index = action - 5
+    #         logging.info(f"Action: Removing model at index {model_index}")
+    #         if (self.num_models > 1): eemls_ensemble.remove_model_by_index(model_index)
 
-        elif action == 10:
-            logging.info("Action: Keeping the ensemble (no changes)")
+    #     elif action == 10:
+    #         logging.info("Action: Keeping the ensemble (no changes)")
 
-        else:
-            logging.warning("Unknown action")
+    #     else:
+    #         logging.warning("Unknown action")

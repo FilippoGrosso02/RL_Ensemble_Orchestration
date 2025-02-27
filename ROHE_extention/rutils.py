@@ -159,7 +159,6 @@ def score_estimation(ensemble: list, contract: dict):
 
 def rl_reward_estimation(performance_metrics: dict, contract_path):
     contract = rohe_utils.load_config(contract_path)
-    print(performance_metrics)
 
     total_score = 0
     
