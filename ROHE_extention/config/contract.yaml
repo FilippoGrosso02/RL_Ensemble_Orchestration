@@ -1,0 +1,32 @@
+mlSpecific:
+  accuracy:
+    weight: 1
+    min_value: 0.9
+    max_value: 1
+    objective: max
+    scale: linear
+    logbase: 2
+  confidence:
+    weight: 0
+    min_value: 0
+    max_value: 1
+    objective: max
+    scale: log
+  latency:
+    weight: 0
+    min_value: 0
+    max_value: 10
+    objective: min
+    scale: log
+  energy:
+    weight: 0
+    min_value: 0
+    max_value: 0.2
+    objective: min
+    scale: log
+  explainability:
+    weight: 0
+    min_value: 0
+    max_value: 1
+    objective: max
+    scale: log

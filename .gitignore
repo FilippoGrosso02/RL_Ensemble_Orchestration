@@ -1,0 +1,8 @@
+# Ignore all __pycache__ folders
+**/__pycache__/
+
+# Ignore all .zip files
+**/*.zip
+
+# Ignore all logs folders
+**/logs/
