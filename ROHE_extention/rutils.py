@@ -10,32 +10,26 @@ DEFAULT_ZERO_ERROR_EVA = float("1e-20")
 
 
 def map_to_log_scale(value, min_value, max_value, logbase):
-    # Calculate the logarithmic scale
-    min_value = float(min_value)
-    max_value = float(max_value)
-
-    if min_value == 0:
-        min_value = DEFAULT_ZERO_ERROR_EVA
-    if max_value == 0:
-        max_value = DEFAULT_ZERO_ERROR_EVA
-    if value <= 0:
-        value = min_value
-
+    if logbase == 1:
+        # Linear mapping
+        return (value - min_value) / (max_value - min_value)
+    
     if value < min_value:
-        value = min_value
-    if value > max_value:
-        value = max_value
-    log_min = log(min_value, logbase)
-    log_max = log(max_value, logbase)
-
-    # Map the value to the logarithmic scale
-    # print(value, max_value, min_value)
-    log_value = log(value, logbase)
-
-    # Map the logarithmic value to the range [0, 1]
-    mapped_value = (log_value - log_min) / (log_max - log_min)
-
-    return mapped_value
+        # Map values lower than min_value to a negative logarithmic scale
+        normalized_value = (value - min_value) / (max_value - min_value)
+        log_scaled_value = -log(-normalized_value * (logbase - 1) + 1, logbase)
+        return log_scaled_value
+    elif value > max_value:
+        # Map values higher than max_value to a logarithmic scale greater than 1
+        normalized_value = (value - min_value) / (max_value - min_value)
+        log_scaled_value = log(normalized_value * (logbase - 1) + 1, logbase)
+        return log_scaled_value
+    else:
+        # Normalize the value to the range [min_value, max_value]
+        normalized_value = (value - min_value) / (max_value - min_value)
+        # Apply the logarithmic scale
+        log_scaled_value = log(normalized_value * (logbase - 1) + 1, logbase)
+        return log_scaled_value
 
 
 def map_to_linear_scale(value, min_value, max_value):

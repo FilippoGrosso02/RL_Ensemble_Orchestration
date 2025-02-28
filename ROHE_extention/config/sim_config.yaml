@@ -47,34 +47,6 @@ inference:
       spike_scale: 3
     response_time_sim: 1
     service_name: EfficientNetV2S
-  MobileNetV2:
-    explainability: 0
-    host:
-      cpu: 1
-    mlmodel_name: MobileNetV2
-    response_time_range:
-      avg: 0.3
-      base_scale: 40
-      max: 0.5
-      min: 0.1
-      noise_scale: 20
-      spike_scale: 3
-    response_time_sim: 1
-    service_name: MobileNetV2
-  NASNetLarge:
-    explainability: 0
-    host:
-      cpu: 1
-    mlmodel_name: NASNetLarge
-    response_time_range:
-      avg: 0.3
-      base_scale: 40
-      max: 0.5
-      min: 0.1
-      noise_scale: 20
-      spike_scale: 3
-    response_time_sim: 1
-    service_name: NASNetLarge
 processing:
   host:
     cpu: 1

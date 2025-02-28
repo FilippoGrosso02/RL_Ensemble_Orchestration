@@ -45,7 +45,7 @@ class EEMLSEnv(gym.Env):
         # Reset the environment to an initial state
         # Define Init Data:
         
-        self.current_state = self.eemlse_simulation.step_inference()  # Get initial state
+        self.current_state = self.eemlse_simulation.step_inference(num_inferences=self.num_inferences)  # Get initial state
         return self.eemlse_simulation.flatten_structured_state(self.current_state)
     
     def step(self, action):

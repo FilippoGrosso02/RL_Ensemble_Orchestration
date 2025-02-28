@@ -40,7 +40,7 @@ class EEMLSSimulation():
         self.ensemble_service = None
         self.total_energy_consumption = 0
         self.structured_state = {}
-        self.flatten_structured_state = []
+        self.flatten_state = []
         self.state_length = self.get_state_length()
     
     def get_state_length(self):
