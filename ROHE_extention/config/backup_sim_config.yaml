@@ -27,6 +27,34 @@ inference:
     host: 
       cuda: 1
     mlmodel_name: MobileNetV2
+  DenseNet121:
+    explainability: 0
+    response_time_range:
+      max: 0.5
+      min: 0.1
+      avg: 0.3
+      base_scale: 40
+      spike_scale: 3
+      noise_scale: 20
+    response_time_sim: 1
+    service_name: DenseNet121
+    host: 
+      cuda: 1
+    mlmodel_name: DenseNet121
+  DenseNet201:
+    explainability: 0
+    response_time_range:
+      max: 0.5
+      min: 0.1
+      avg: 0.3
+      base_scale: 40
+      spike_scale: 3
+      noise_scale: 20
+    response_time_sim: 1
+    service_name: DenseNet201
+    host: 
+      cuda: 1
+    mlmodel_name: DenseNet201
 processing:
   response_time_range:
     max: 0.01
@@ -40,12 +68,12 @@ processing:
   host: 
     cpu: 1
 distribution:
-  n01440764: 1
-  n01443537: 1
-  n01484850: 1
-  n01491361: 1
-  n01494475: 1
-  n01496331: 0
+  n01440764: 100
+  n01443537: 11
+  n01484850: 50
+  n01491361: 100
+  n01494475: 0
+  n01496331: 20
   n01498041: 0
   n01514668: 0
   n01514859: 0

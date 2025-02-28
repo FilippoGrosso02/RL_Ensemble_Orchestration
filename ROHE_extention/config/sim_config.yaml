@@ -32,7 +32,35 @@ ensemble:
   response_time_sim: 1
   service_name: ensemble
   service_type: ensemble
-inference: {}
+inference:
+  EfficientNetB7:
+    explainability: 0
+    host:
+      cuda: 1
+    mlmodel_name: EfficientNetB7
+    response_time_range:
+      avg: 0.5544217497615491
+      base_scale: 40
+      max: 0.7320783138275146
+      min: 0.4392211437225342
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: EfficientNetB7
+  EfficientNetV2S:
+    explainability: 0
+    host:
+      cuda: 1
+    mlmodel_name: EfficientNetV2S
+    response_time_range:
+      avg: 0.33324663123350046
+      base_scale: 40
+      max: 0.5228641033172607
+      min: 0.230950117111206
+      noise_scale: 20
+      spike_scale: 3
+    response_time_sim: 1
+    service_name: EfficientNetV2S
 processing:
   host:
     cpu: 1

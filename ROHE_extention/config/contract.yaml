@@ -1,8 +1,8 @@
 mlSpecific:
   accuracy:
     weight: 1
-    min_value: 0.8
-    max_value: 0.9
+    min_value: 0.85
+    max_value: 0.96
     objective: max
     scale: log
     logbase: 10
