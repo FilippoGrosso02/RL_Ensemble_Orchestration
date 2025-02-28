@@ -60,6 +60,7 @@ class ProfileManager():
             self.model_profile[model_name]["response_time"]["cuda"]["min"] = min_response_time
             self.model_profile[model_name]["response_time"]["cuda"]["avg"] = avg_response_time
             self.save_yaml(os.path.join(parent_dir, self.profile_path), self.model_profile)
+        print("Update profile for model")
         if self.update_flag:
             Timer(DEFAULT_INTERVAL, self.update_profile).start()
         

@@ -112,16 +112,25 @@ class EEMLSEnv(gym.Env):
             logging.info("Action: Keeping the ensemble")
         
         elif action == "add_model":
-            eemls_ensemble.add_best_model(weights)
+            model_name = eemls_ensemble.add_best_model(weights)
             logging.info("Action: Adding a model")
+            if model_name is not None:
+                self.num_models += 1
             # Logic for adding a new model (Placeholder)
         elif action == "replace_model":
             logging.info("Action: Replacing a model")
-            eemls_ensemble.remove_worst_model(weights)
-            eemls_ensemble.add_best_model(weights)
+            model_name = eemls_ensemble.remove_worst_model(weights)
+            if model_name is not None:
+                self.num_models -= 1
+                model_name = eemls_ensemble.add_best_model(weights)
+                if model_name is not None:
+                    self.num_models += 1
             # Logic for replacing a model (Placeholder)
         elif action == "remove_model":
-            eemls_ensemble.remove_worst_model(weights)
+            model_name = eemls_ensemble.remove_worst_model(weights)
+            if model_name is not None:
+                self.num_models -= 1
+            logging.info("Action: Removing a model")
 
         elif action == "add_random_model":
             eemls_ensemble.add_random_model()
@@ -130,7 +139,6 @@ class EEMLSEnv(gym.Env):
         elif action == "replace_random_model":
             eemls_ensemble.remove_random_model()
             eemls_ensemble.add_random_model()
-
         else:
             logging.warning(f"Unknown action: {action}")
 

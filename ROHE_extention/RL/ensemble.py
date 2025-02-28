@@ -42,14 +42,17 @@ class RoheEnsemble:
         """Add the best model to the target YAML based on scoring."""
         best_model_name = self.select_best_model(weights)
         if best_model_name:
-            self.add_model(best_model_name)
+            model_name = self.add_model(best_model_name)
+            if model_name != None:
+                return best_model_name
+        return None
         
     def add_model(self, model_name: str):
         """Add a single model to the target YAML."""
         model_profiles = self.load_yaml(self.model_profile_path)
         if model_profiles is None or model_name not in model_profiles:
             print(f"Model '{model_name}' not found in model profiles.")
-            return
+            return None
 
         # Format model data
         #print( model_profiles[model_name])
@@ -67,6 +70,7 @@ class RoheEnsemble:
 
         #print(formatted_model)
         print(f"Model '{model_name}' successfully added to the target YAML.")
+        return model_name
     
     # LOADING AND SAVING THE YAML 
     
@@ -100,13 +104,13 @@ class RoheEnsemble:
 
         if not ensemble_config or 'inference' not in ensemble_config:
             print("No models available in the target YAML to remove.")
-            return
+            return None
 
         present_models = ensemble_config['inference'].keys()
 
         if not model_profiles:
             print("No model profiles found.")
-            return
+            return None
 
         # Compute scores for models in the target YAML
         model_scores = {}
@@ -119,14 +123,17 @@ class RoheEnsemble:
 
         if not model_scores:
             print("No models with valid scores found.")
-            return
+            return None
 
         # Find the model with the lowest score
         worst_model_name = min(model_scores, key=model_scores.get)
         print(f"Worst model: {worst_model_name} with score: {model_scores[worst_model_name]}")
 
         # Remove the worst model from the target YAML
-        self.remove_model(worst_model_name)
+        model_name = self.remove_model(worst_model_name)
+        if model_name != None:
+            return worst_model_name
+        return None
             
 
     def remove_model(self, model_name: str):
@@ -134,13 +141,13 @@ class RoheEnsemble:
         ensemble_config = self.load_yaml(self.ensemble_config_path)
         if ensemble_config is None or 'inference' not in ensemble_config or model_name not in ensemble_config['inference']:
             print(f"Model '{model_name}' not found in the target YAML.")
-            return
+            return None
 
         # Remove the model from the target YAML
         del ensemble_config['inference'][model_name]
         self.save_yaml(self.ensemble_config_path, ensemble_config)
         print(f"Model '{model_name}' successfully removed from the target YAML.")
-        
+        return model_name
 
     ### BASIC CONFIG OPERATIONS
     

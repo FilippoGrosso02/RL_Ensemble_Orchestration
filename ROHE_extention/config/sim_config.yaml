@@ -32,63 +32,7 @@ ensemble:
   response_time_sim: 1
   service_name: ensemble
   service_type: ensemble
-inference:
-  EfficientNetB7:
-    explainability: 0
-    host:
-      cuda: 1
-    mlmodel_name: EfficientNetB7
-    response_time_range:
-      avg: 0.5544214251391385
-      base_scale: 40
-      max: 0.7307844161987305
-      min: 0.3234283924102783
-      noise_scale: 20
-      spike_scale: 3
-    response_time_sim: 1
-    service_name: EfficientNetB7
-  EfficientNetV2S:
-    explainability: 0
-    host:
-      cuda: 1
-    mlmodel_name: EfficientNetV2S
-    response_time_range:
-      avg: 0.23081557921941767
-      base_scale: 40
-      max: 0.3144452571868896
-      min: 0.2253203392028808
-      noise_scale: 20
-      spike_scale: 3
-    response_time_sim: 1
-    service_name: EfficientNetV2S
-  InceptionResNetV2:
-    explainability: 0
-    host:
-      cuda: 1
-    mlmodel_name: InceptionResNetV2
-    response_time_range:
-      avg: 0.9939665740492654
-      base_scale: 40
-      max: 1.1470754146575928
-      min: 0.9842898845672609
-      noise_scale: 20
-      spike_scale: 3
-    response_time_sim: 1
-    service_name: InceptionResNetV2
-  NASNetLarge:
-    explainability: 0
-    host:
-      cuda: 1
-    mlmodel_name: NASNetLarge
-    response_time_range:
-      avg: 1.3722617124256336
-      base_scale: 40
-      max: 1.461817741394043
-      min: 1.3610644340515137
-      noise_scale: 20
-      spike_scale: 3
-    response_time_sim: 1
-    service_name: NASNetLarge
+inference: {}
 processing:
   host:
     cpu: 1
