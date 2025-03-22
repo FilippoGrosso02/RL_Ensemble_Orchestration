@@ -2,9 +2,7 @@ from managers.model_rl import ServiceConfig, ProcessingService, ServiceType, Inf
 from managers.config_manager import ConfigManager
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-#import logging
 import os
-#import time
 import pandas as pd
 import random
 import copy
@@ -17,12 +15,12 @@ import numpy as np
 
 
 class StateManager():
-    def __init__(self, current_dir):
+    def __init__(self, current_dir, config_path):
         # Initialize necessary variables
         
         self.current_dir = current_dir
         self.parent_dir = os.path.dirname(current_dir)
-        self.CONFIG_PATH = os.path.join(current_dir, "sim_config.yaml")
+        self.CONFIG_PATH = config_path
         self.PROFILE_PATH = os.path.join(current_dir, "profile/model_profile/model_profile.yaml")
         self.FILE_DATA_PATH = os.path.join(current_dir, "file_label.csv")
         self.MODEL_DATA_PATH = os.path.join(current_dir, "profile/processed")

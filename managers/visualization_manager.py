@@ -9,11 +9,13 @@ import pandas as pd
 
 
 class VisualizationManager:
-    def __init__(self, current_dir, csv_path=f"default"):
+    def __init__(self, current_dir, csv_path=f"default", seed_value = "1"):
 
         # Construct the full directory path
         self.csv_dir = os.path.join(current_dir, "results", csv_path)
-        self.csv_path = os.path.join(self.csv_dir, "reinforcement_learning.csv")
+        result_path = f"rl_results_env_{seed_value}.csv"
+        self.csv_path = os.path.join(self.csv_dir,result_path )
+
 
         # Ensure the directory exists
         os.makedirs(self.csv_dir, exist_ok=True)
@@ -119,6 +121,7 @@ class VisualizationManager:
 
         """
         flattened_state_with_weights = {
+        'total_energy_consumption': state['ensemble_state']['total_energy_consumption'],
         'total_energy_consumption': state['ensemble_state']['total_energy_consumption'],
         'ensemble_size': state['ensemble_state']['ensemble_size'],
         'input_file_length': state['input_state']['input_file_length'],

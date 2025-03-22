@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 import numpy as np
 
 from managers.state_manager import StateManager 
@@ -13,19 +14,21 @@ from gym.utils import seeding
 
 class SimulationEnv(gym.Env):
 
-    def __init__(self, path_name, num_inferences = 100, parallel_workers = 10):
+    def __init__(self, path_name, env_index=0, num_inferences = 100, parallel_workers = 10):
         super(SimulationEnv, self).__init__()
+        self.seed_value = env_index
 
         current_dir = os.getcwd()   
         
         parent_dir = os.path.dirname(current_dir)
-        CONFIG_PATH = os.path.join(current_dir, "sim_config.yaml")
+        CONFIG_PATH = os.path.join(current_dir, "profile/config_profile/sim_config_{}.yaml".format(self.seed_value))
         PROFILE_PATH = os.path.join(current_dir, "profile/model_profile/model_profile.yaml")
         self.CONTRACT_PATH = os.path.join(current_dir, "config/contract_metrics.json")
 
-        self.state_manager = StateManager(current_dir)
+        self.state_manager = StateManager(current_dir, CONFIG_PATH)
         self.config_manager = ConfigManager(PROFILE_PATH, CONFIG_PATH)
-        self.visualization_manager = VisualizationManager(current_dir, path_name)
+
+        self.visualization_manager = VisualizationManager(current_dir, path_name, self.seed_value)
         self.dash_app = DashApp(self.visualization_manager)
 
         #self.dash_app.run()
@@ -33,14 +36,10 @@ class SimulationEnv(gym.Env):
 
         self.num_inferences = num_inferences
         self.parallel_workers = parallel_workers
-        # Define constants
         self.state_size = self.state_manager.state_lenght # Change this to be dynamic based on the enviroment
-        # Observation space: Fixed size of 55
         self.observation_space = spaces.Box(
             low=0.0, high=10.0, shape=(self.state_size,), dtype=np.float32
         )
-
-        # Action space (example: add/remove/replace a model)
         self.action_space = spaces.Discrete(11)
 
         self.weights = {
@@ -51,12 +50,11 @@ class SimulationEnv(gym.Env):
             "explainability": 0.0
         }
         self.step_count = 0
-        self.seed()
+
 
     def seed(self, seed=None):
         """Set the seed for this environment's random number generator."""
         self.np_random, seed = seeding.np_random(seed)
-        self.seed_value = seed 
         return [seed]
 
 
@@ -69,11 +67,12 @@ class SimulationEnv(gym.Env):
         return self.state_manager.flatten_structured_state(self.current_state)
 
     def step(self, action):
-        
+
+        logging.info("Choosing action at step: %d | Env seed: %s | Num_models: %s", self.step_count, self.seed_value, self.num_models)
         self.step_count += 1
         self.apply_action(action)
         state = self.state_manager.get_state(num_samples = self.num_inferences, parallel_workers=self.parallel_workers)
-        #print("STATE: ", state)
+
 
         # Simulate a step in the environment
         self.current_state = state
@@ -83,6 +82,7 @@ class SimulationEnv(gym.Env):
         state["action"] = action
         self.num_models = state["ensemble_state"]["ensemble_size"]
         state["models"] = list(self.state_manager.ensemble_service.ensemble.keys())
+        print("num_models:", self.num_models,"STATE: ", state)
 
         self.visualization_manager.reward_list.append(reward)
         self.visualization_manager.add_state_to_csv(state)
@@ -129,7 +129,7 @@ class SimulationEnv(gym.Env):
         elif 5 <= action <= 9:
             model_index = action - 5
             logging.info(f"Action: Removing model at index {model_index}")
-            if (self.num_models > 1): manager.remove_model_by_index(model_index)
+            if (self.num_models > 2): manager.remove_model_by_index(model_index)
 
         elif action == 10:
             logging.info("Action: Keeping the ensemble (no changes)")

@@ -33,3 +33,22 @@ If this is the case the RL model could be applied to situations where the algori
 
 Overall a "learning" RL model for ensembe orchestration would prvide a more versatile and out of the box solution compared to having to score and test each model before running the inference. 
 
+### Parameters to test
+
+### **1. learning_rate (`Learning Rate`)**  
+Controls how much the model updates its weights; a lower value makes training more stable but slower, while a higher value speeds up training but risks instability.
+
+### **2. `n_steps` (Rollout Buffer Size)**  
+Defines how many steps the agent collects before updating; larger values lead to more stable training but higher memory usage.
+
+### **3. `batch_size` (Minibatch Size)**  
+Determines the number of samples used per update; smaller sizes improve exploration, while larger sizes lead to smoother updates.
+
+### **4. `clip_range` (Clipping Range for Policy Updates)**  
+Controls how much the policy can change in each update to maintain stability; typically set to `0.1`–`0.2`.
+
+### **5. `net_arch` (Neural Network Architecture)**  
+Specifies the number of neurons per layer in the policy and value networks; deeper networks improve learning in complex environments.
+
+### **6. `n_envs` (Number of Parallel Environments)**  
+Defines the number of environments running in parallel; higher values speed up training but increase resource usage.
