@@ -1,14 +1,14 @@
 # Reinforcement Learning ML Ensemble Orcherstration
 
-The goal of this research is to develop a **reinforcement learning (RL) component** that can dynamically orchestrate a **machine learning (ML) ensemble**, optimizing for user-defined metrics. This component aims to be part of a larger orchestration project by the Aalto Sea group, [ROHE Orchestrator](https://github.com/minhtribk12/ROHE_orchestrator)
+The goal of this research is to develop a **reinforcement learning (RL) component** that can dynamically orchestrate a **machine learning (ML) ensemble**, optimizing for user-defined metrics. This component aims to be part of a larger orchestration project by the Aalto Sea group, [ROHE Orchestrator](https://github.com/minhtribk12/ROHE_orchestrator).
 
 The RL algorithm is able to learn the optimal ensemble during the ML inference without knowing any prior knowledge about the model performance. It does so by adding and removing models in real time and observing the rewards.
 
 In this research project I:
 - developed a modular **set of functions** to create an RL enviroment that can be adapted to any ML pipeline
-- tested the performance of a **PPO model** orchestrating the ML pipeline on a simulated [ImageNET](https://www.image-net.org/) [2] image recognition task** with **different parameters** and **architectures**
-- explored the advantages and tradeoffs of **parallelizing the learning enviroments**, using the [OpenAI Gym](https://gymnasium.farama.org/) [3] library
-- conducted tests on the [CSC Puhti Supercomputer](https://docs.csc.fi/computing/systems-puhti/) in Finland
+- tested the performance of a **PPO model** orchestrating the ML pipeline on a simulated [ImageNET](https://www.image-net.org/) [2] image recognition task** with **different parameters** and **architectures**.
+- explored the advantages and tradeoffs of **parallelizing the learning enviroments**, using the [OpenAI Gym](https://gymnasium.farama.org/) [3] library.
+- conducted tests on the [CSC Puhti Supercomputer](https://docs.csc.fi/computing/systems-puhti/) in Finland.
 
 # 1. Design 
 
@@ -35,18 +35,18 @@ The main components of the RL add-on:
      - Modifies the YAML file, enabling various actions to be called by the RL model.
    - **Model RL** (model_rl)
      - Simulates ML inference based on the content specified in the YAML file.
-     - Part of the [ROHE library](https://github.com/minhtribk12/ROHE_orchestrator) [1]
+     - Part of the [ROHE library](https://github.com/minhtribk12/ROHE_orchestrator) [1].
 
 ## 1.2 PPO Design 
 
 ### Action Space
-The action space of the model is: one action for adding each model in the list, one action for removing each model, one action to keep the ensemble as is
+The action space of the model is: one action for adding each model in the list, one action for removing each model, one action to keep the ensemble as is.
 
 ### Steps
 Each step the model performs:
-- one action on the ensemble (either adding a model, removing it or keeping it as is)
-- a certain number of inferences with that particular ensemble (we set the default to 100 inferences) 
-- compute the reward over these inferences based on the predefined weights in the contract (accuracy, energy estimate, etc..)
+- one action on the ensemble (either adding a model, removing it or keeping it as is).
+- a certain number of inferences with that particular ensemble (we set the default to 100 inferences).
+- compute the reward over these inferences based on the predefined weights in the contract (accuracy, energy estimate, etc..).
 
 ### Reward Function and User-Defined Metrics
 The reward of the RL model is defined by the following formula:
@@ -162,7 +162,7 @@ The default architecture for the .. proved to be a solid choice. A smaller archi
 
 ### CPU Core Allocation
 
-%%We can see that a lower core allocation really limits the speed 
+See discussion in **section 3** 
 
 | Job Name          | Key Change | n_envs | learning_rate | clip_range | CPUs | Elapsed   | Notes                  |
 |-------------------|------------|--------|----------------|-------------|------|-----------|------------------------|
@@ -213,7 +213,7 @@ The configuration with n_envs=16 and a high learning rate (3e-3) achieved the be
 
 Stable Baselines3 leverages the `vec_env` module to enable parallel experience collection by running multiple copies of the environment in parallel subprocesses. This can be especially beneficial for on-policy algorithms like PPO, where frequent data collection is required to update the policy. 
 
-`SubprocVecEnv` and `DummyVecEnv` wrappers manage this parallelization, vectorizing the enviroments in processes that ca be run in parallel. In practice instead of passing one action, reward per step the parallel enviroment passes a **vector of action and reward of size n**
+`SubprocVecEnv` and `DummyVecEnv` wrappers manage this parallelization, vectorizing the enviroments in processes that ca be run in parallel. In practice instead of passing one action, reward per step the parallel enviroment passes a **vector of action and reward of size n**.
 
 However, `vec_env` parallelism is limited to a **single physical node**, which restricts scalability when CPU resources are saturated. Although increasing the number of CPUs per job improves throughput to some extent, there is a diminishing return due to the lack of **true distributed execution** across multiple machines. 
 
@@ -276,7 +276,7 @@ Most RL efforts in the past have been mostly related to simple enviroments or ro
   Apply the developed methods to real-world domains such as Internet of Things (IoT), drone fleets, and dynamic network management to evaluate their effectiveness in practical, cloud-native contexts.
 
 
-# 5. Put some references
+# 5. References
 
 - [1] Nguyen, T., Truong, L., Arcaini, P., & Ishikawa, F. (2024). *Optimizing multiple consumer-specific objectives in end-to-end ensemble machine learning serving*. In *Proceedings of the IEEE/ACM International Conference on Utility and Cloud Computing*.
 
