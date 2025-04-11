@@ -1,0 +1,13 @@
+JobID,JobName,Elapsed
+27277705,test_rl_job_4env,04:42:38
+27278078,test_rl_job_1env,01:11:34
+27278117,test_rl_job_8env,08:10:30
+27278136,test_rl_job_16env,15:45:28
+27282935,test_rl_job_lowlearn,04:10:42
+27282936,test_rl_job_highlearn,04:35:05
+27285307,ppo_test_lowclip,05:08:14
+27285309,ppo_test_highclip,04:02:45
+27285310,test_rl_job_smallarchitecture,01:05:46
+27299888,test_rl_job_deeparchitecture,04:49:44
+27285630,test_rl_job_1cpu,07:40:00
+27300171,test_rl_job_16env_highrate,RUNNING

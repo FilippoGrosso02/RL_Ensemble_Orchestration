@@ -21,7 +21,7 @@ class SimulationEnv(gym.Env):
         current_dir = os.getcwd()   
         
         parent_dir = os.path.dirname(current_dir)
-        CONFIG_PATH = os.path.join(current_dir, "profile/config_profile/sim_config_{}.yaml".format(self.seed_value))
+        CONFIG_PATH = os.path.join(current_dir, f"profile/config_profile_{path_name}/sim_config_{self.seed_value}.yaml")
         PROFILE_PATH = os.path.join(current_dir, "profile/model_profile/model_profile.yaml")
         self.CONTRACT_PATH = os.path.join(current_dir, "config/contract_metrics.json")
 
@@ -129,7 +129,7 @@ class SimulationEnv(gym.Env):
         elif 5 <= action <= 9:
             model_index = action - 5
             logging.info(f"Action: Removing model at index {model_index}")
-            if (self.num_models > 2): manager.remove_model_by_index(model_index)
+            if (self.num_models > 1): manager.remove_model_by_index(model_index)
 
         elif action == 10:
             logging.info("Action: Keeping the ensemble (no changes)")
